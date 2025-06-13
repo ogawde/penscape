@@ -1,34 +1,44 @@
 import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { SignupInput } from "penscape-common";
+import { signupInput, signinInput } from "penscape-common";
 import axios from "axios";
 
-const BACKEND_URL = "http://localhost:8787";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 console.log('Backend URL:', BACKEND_URL);
 
 export const Auth = ({ type }: { type: "signup" | "signin" }) => {
   const navigate = useNavigate();
 
-  const [postInputs, setpostInputs] = useState<SignupInput>({
-    name: "",
+  const [postInputs, setpostInputs] = useState<any>({
     username: "",
+    email: "",
     password: "",
   });
+  const [error, setError] = useState<string | null>(null);
 
   async function sendRequest() {
+    setError(null);
+    // Client-side validation
+    const schema = type === "signup" ? signupInput : signinInput;
+    const payload = type === "signup"
+      ? { username: postInputs.username, email: postInputs.email, password: postInputs.password }
+      : { username: postInputs.username, password: postInputs.password };
+    const result = schema.safeParse(payload);
+    if (!result.success) {
+      setError(result.error.errors[0]?.message || "Invalid input");
+      return;
+    }
     try {
-      console.log('Sending Request with:', postInputs);
-
       const response = await axios.post(
         `${BACKEND_URL}/api/v1/user/${type === "signin" ? "signin" : "signup"}`,
-        postInputs
+        payload
       );
-
       const jwt = response.data.jwt;
       localStorage.setItem("token", jwt);
       navigate("/blogs");
     } catch (error) {
+      setError("Server error or invalid credentials");
       console.log(error);
     }
   }
@@ -47,7 +57,6 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
               {type === "signin"
                 ? "Dont have an account?"
                 : "Already have an account?"}
-
               <Link
                 className="pl-2 pr-2 underline"
                 to={type === "signin" ? "/signup" : "/signin"}
@@ -57,18 +66,6 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
             </div>
           </div>
           <div className="pt-8">
-            {type === "signup" ? (
-              <LabelledInput
-                label="Name"
-                placeholder="H. Singh"
-                onChange={(e) => {
-                  setpostInputs({
-                    ...postInputs,
-                    name: e.target.value,
-                  });
-                }}
-              />
-            ) : null}
             <LabelledInput
               label="Username"
               placeholder="hsingh"
@@ -79,6 +76,18 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
                 });
               }}
             />
+            {type === "signup" ? (
+              <LabelledInput
+                label="Email"
+                placeholder="h.singh@email.com"
+                onChange={(e) => {
+                  setpostInputs({
+                    ...postInputs,
+                    email: e.target.value,
+                  });
+                }}
+              />
+            ) : null}
             <LabelledInput
               label="Password"
               placeholder="********"
@@ -90,6 +99,9 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
                 });
               }}
             />
+            {error && (
+              <div className="text-red-600 pt-2 text-sm font-semibold">{error}</div>
+            )}
           </div>
           <div className="pt-3">
             <button
