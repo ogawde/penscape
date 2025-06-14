@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ChangeEvent, useState } from "react";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+console.log(BACKEND_URL);
 
 export const Publish = () => {
     const [title, setTitle] = useState("");
