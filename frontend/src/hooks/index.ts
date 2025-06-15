@@ -7,9 +7,20 @@ export interface Blog {
   content: string;
   title: string;
   id: number;
+  published?: boolean;
+  tags?: string[];
   author: {
-    name: string;
+    id: number;
+    username: string;
+    email?: string;
   };
+}
+
+export interface User {
+  id: number;
+  username: string;
+  email: string;
+  blogs?: Blog[];
 }
 
 export const useBlog = ({ id }: { id: string }) => {
@@ -19,26 +30,23 @@ export const useBlog = ({ id }: { id: string }) => {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        console.log(`Fetching blog with id: ${id}`);
         const response = await axios.get(`${BACKEND_URL}/api/v1/blog/${id}`, {
           headers: {
             Authorization: localStorage.getItem('token') || '',
           },
         });
-        console.log('Blog data received:', response.data);
-        setBlog(response.data); // Assuming response.data is the blog object
+        setBlog(response.data);
       } catch (error) {
-        console.error('Error fetching blog:', error);
-        setBlog(null); // Ensure blog is set to null in case of an error
+        setBlog(null);
       } finally {
-        setLoading(false); // Ensure loading is set to false in all cases
+        setLoading(false);
       }
     };
 
     if (id) {
       fetchBlog();
     } else {
-      setLoading(false); // Handle case where id is not provided
+      setLoading(false);
     }
   }, [id]);
 
@@ -55,19 +63,16 @@ export const useBlogs = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        console.log('Fetching all blogs');
         const response = await axios.get(`${BACKEND_URL}/api/v1/blog/bulk`, {
           headers: {
             Authorization: localStorage.getItem("token") || '',
           },
         });
-        console.log('Blogs data received:', response.data);
-        setBlogs(response.data); // Set blogs state directly from response.data
+        setBlogs(response.data);
       } catch (error) {
-        console.error('Error fetching blogs:', error);
-        setBlogs([]); // Ensure blogs is set to an empty array in case of an error
+        setBlogs([]);
       } finally {
-        setLoading(false); // Ensure loading is set to false in all cases
+        setLoading(false);
       }
     };
 
@@ -77,6 +82,134 @@ export const useBlogs = () => {
   return {
     loading,
     blogs,
+  };
+};
+
+export const useAuthorBlogs = (authorId: number) => {
+  const [loading, setLoading] = useState(true);
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+
+  useEffect(() => {
+    const fetchAuthorBlogs = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_URL}/api/v1/blog/author/${authorId}`, {
+          headers: {
+            Authorization: localStorage.getItem("token") || '',
+          },
+        });
+        setBlogs(response.data);
+      } catch (error) {
+        setBlogs([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (authorId) {
+      fetchAuthorBlogs();
+    } else {
+      setLoading(false);
+    }
+  }, [authorId]);
+
+  return {
+    loading,
+    blogs,
+  };
+};
+
+export const useRelatedBlogs = (blogId: number) => {
+  const [loading, setLoading] = useState(true);
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+
+  useEffect(() => {
+    const fetchRelatedBlogs = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_URL}/api/v1/blog/${blogId}/related`, {
+          headers: {
+            Authorization: localStorage.getItem("token") || '',
+          },
+        });
+        setBlogs(response.data);
+      } catch (error) {
+        setBlogs([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (blogId) {
+      fetchRelatedBlogs();
+    } else {
+      setLoading(false);
+    }
+  }, [blogId]);
+
+  return {
+    loading,
+    blogs,
+  };
+};
+
+export const useCurrentUser = () => {
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_URL}/api/v1/user/me`, {
+          headers: {
+            Authorization: localStorage.getItem("token") || '',
+          },
+        });
+        setUser(response.data);
+      } catch (error) {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
+
+  return {
+    loading,
+    user,
+  };
+};
+
+export const useUser = (userId: number) => {
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_URL}/api/v1/user/${userId}`, {
+          headers: {
+            Authorization: localStorage.getItem("token") || '',
+          },
+        });
+        setUser(response.data);
+      } catch (error) {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (userId) {
+      fetchUser();
+    } else {
+      setLoading(false);
+    }
+  }, [userId]);
+
+  return {
+    loading,
+    user,
   };
 };
 

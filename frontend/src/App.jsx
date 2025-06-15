@@ -5,6 +5,8 @@ import { Signin } from './pages/Signin'
 import { Blogs } from './pages/Blogs'
 import { Blog } from './pages/Blog'
 import { Publish } from './pages/Publish'
+import { Profile } from './pages/Profile'
+import { Author } from './pages/Author'
 import './index.css'
 
 function App() {
@@ -12,12 +14,14 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/signup"element={<Signup />} />
-          <Route path="/"element={<Signup />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/blog/:id" element={<Blog />} /> 
           <Route path="/blogs" element={<Blogs />} /> 
           <Route path="/publish" element={<Publish />} /> 
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/author/:id" element={<Author />} />
         </Routes>
       </BrowserRouter>
     </>

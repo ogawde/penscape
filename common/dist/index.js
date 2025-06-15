@@ -23,9 +23,11 @@ exports.signinInput = zod_1.default.object({
 exports.createBlogInput = zod_1.default.object({
     title: zod_1.default.string(),
     content: zod_1.default.string(),
+    tags: zod_1.default.array(zod_1.default.string()).max(3, "Maximum 3 tags allowed").optional().default([])
 });
 exports.updateBlogInput = zod_1.default.object({
     title: zod_1.default.string(),
     content: zod_1.default.string(),
-    id: zod_1.default.number()
+    id: zod_1.default.number(),
+    tags: zod_1.default.array(zod_1.default.string()).max(3, "Maximum 3 tags allowed").optional()
 });

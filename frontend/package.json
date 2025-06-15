@@ -10,15 +10,23 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@lexical/code": "^0.36.2",
+    "@lexical/list": "^0.36.2",
+    "@lexical/react": "^0.36.2",
+    "@lexical/rich-text": "^0.36.2",
+    "@lexical/utils": "^0.36.2",
     "@tailwindcss/vite": "^4.1.11",
-    "@types/axios": "^0.14.4",
     "axios": "^1.10.0",
-    "dotenv": "^17.2.0",
-    "lodash": "^4.17.21",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lexical": "^0.36.2",
+    "lucide-react": "^0.545.0",
     "penscape-common": "^1.0.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^7.7.0"
+    "react-router-dom": "^7.7.0",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.11",

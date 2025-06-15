@@ -22,7 +22,6 @@ blogRouter.use("/*", async (c, next) => {
   }
   
   const token = jwt
-  console.log(token);
 
   const payload = await verify(token, c.env.JWT_SECRET);
   if (!payload) {
@@ -53,6 +52,7 @@ blogRouter.post("/", async (c) => {
       title: body.title,
       content: body.content,
       authorId: Number(userId),
+      tags: body.tags || [],
     },
   });
   return c.json({
@@ -81,6 +81,7 @@ blogRouter.put("/", async (c) => {
     data: {
       title: body.title,
       content: body.content,
+      tags: body.tags || [],
     },
   });
 
@@ -98,10 +99,11 @@ blogRouter.get("/bulk", async (c) => {
       content: true,
       title: true,
       id: true,
+      tags: true,
       author: {
         select: {
           id: true,
-          email: true,
+          username: true,
         },
       },
     },
@@ -121,8 +123,94 @@ blogRouter.get("/:id", async (c) => {
     where: {
       id,
     },
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      published: true,
+      tags: true,
+      author: {
+        select: {
+          id: true,
+          username: true,
+          email: true,
+        },
+      },
+    },
   });
   return c.json(post);
+});
+
+blogRouter.get("/:id/related", async (c) => {
+  const id = Number(c.req.param("id"));
+
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env?.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  // First get the blog to find its author
+  const blog = await prisma.blog.findUnique({
+    where: { id },
+    select: { authorId: true },
+  });
+
+  if (!blog) {
+    c.status(404);
+    return c.json({ error: "Blog not found" });
+  }
+
+  // Get 3 other blogs by the same author
+  const relatedBlogs = await prisma.blog.findMany({
+    where: {
+      authorId: blog.authorId,
+      id: { not: id },
+    },
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      tags: true,
+      author: {
+        select: {
+          id: true,
+          username: true,
+        },
+      },
+    },
+    take: 3,
+  });
+
+  return c.json(relatedBlogs);
+});
+
+blogRouter.get("/author/:authorId", async (c) => {
+  const authorId = Number(c.req.param("authorId"));
+
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env?.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  const blogs = await prisma.blog.findMany({
+    where: {
+      authorId,
+    },
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      published: true,
+      tags: true,
+      author: {
+        select: {
+          id: true,
+          username: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return c.json(blogs);
 });
 
 

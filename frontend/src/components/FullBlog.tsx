@@ -1,35 +1,114 @@
-import { Blog } from "../hooks";
+import { Blog, useRelatedBlogs } from "../hooks";
 import { Appbar } from "./Appbar";
-import { Avatar } from "./BlogCard";
+import { Avatar, BlogCard } from "./BlogCard";
+import { Link } from "react-router-dom";
 
 export const FullBlog = ({ blog }: { blog: Blog }) => {
-  const authorName = blog.author ? blog.author.name : "Anonymous";
+  const authorName = blog.author?.username || "Anonymous";
+  const authorId = blog.author?.id || 0;
+  const { loading: relatedLoading, blogs: relatedBlogs } = useRelatedBlogs(blog.id);
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       <Appbar />
-      <div className="flex justify-center">
-        <div className="grid grid-cols-12 px-10 w-full pt-200 max-w-screen-xl pt-12">
-          <div className="col-span-8">
-            <div className="text-5xl font-extrabold">{blog.title}</div>
-            <div className="text-slate-500 pt-2">Post on 2nd December 2023</div>
-            <div className="pt-4">{blog.content}</div>
-          </div>
-          <div className="col-span-4">
-            <div className="text-slate-600 text-lg">Author</div>
-            <div className="flex w-full">
-              <div className="pr-4 flex flex-col justify-center">
-                <Avatar size="big" name={authorName} />
-              </div>
-              <div>
-                <div className="text-xl font-bold">{authorName}</div>
-                <div className="pt-2 text-slate-500">
-                  Random catch phrase about the author's ability to grab the user's attention
+      <div className="pt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2 bg-white rounded-lg shadow-sm p-8">
+            <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+              {blog.title}
+            </h1>
+            <div className="flex items-center mb-6 pb-6 border-b border-gray-200">
+              <Avatar size="big" name={authorName} />
+              <div className="ml-3">
+                <Link 
+                  to={`/author/${authorId}`}
+                  className="text-lg font-semibold text-gray-900 hover:text-teal-600 transition-colors duration-200"
+                >
+                  {authorName}
+                </Link>
+                <div className="text-sm text-gray-500">
+                  {new Date().toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}
                 </div>
+              </div>
+            </div>
+            {/* Tags */}
+            {blog.tags && blog.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-6">
+                {blog.tags.map((tag, index) => (
+                  <span
+                    key={index}
+                    className="px-3 py-1 bg-teal-100 text-teal-700 text-sm font-medium rounded-full"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+            
+            <div className="prose prose-lg max-w-none text-gray-800 whitespace-pre-wrap leading-relaxed">
+              {blog.content}
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-24">
+              {/* Author Info */}
+              <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+                  About the Author
+                </h3>
+                <div className="flex items-start">
+                  <Avatar size="big" name={authorName} />
+                  <div className="ml-3">
+                    <Link 
+                      to={`/author/${authorId}`}
+                      className="text-lg font-bold text-gray-900 hover:text-teal-600 transition-colors duration-200"
+                    >
+                      {authorName}
+                    </Link>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Writer and storyteller sharing insights and experiences.
+                    </p>
+                  </div>
+                </div>
+                <Link 
+                  to={`/author/${authorId}`}
+                  className="mt-4 block w-full text-center px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-all duration-300 transform hover:scale-105 shadow-md"
+                >
+                  View Profile
+                </Link>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Related Blogs Section */}
+        {!relatedLoading && relatedBlogs.length > 0 && (
+          <div className="mt-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">
+              More from {authorName}
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {relatedBlogs.map((relatedBlog) => (
+                <BlogCard
+                  key={relatedBlog.id}
+                  id={relatedBlog.id}
+                  authorName={relatedBlog.author?.username || "Anonymous"}
+                  title={relatedBlog.title}
+                  content={relatedBlog.content}
+                  publishedDate={new Date().toLocaleDateString()}
+                  tags={relatedBlog.tags}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
