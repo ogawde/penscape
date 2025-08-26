@@ -65,13 +65,13 @@ export const Publish = () => {
     return (
         <div className="min-h-screen bg-gray-50">
             <Appbar />
-            <div className="pt-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="pt-28 sm:pt-32 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
                 {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                <div className="mb-10 sm:mb-12">
+                    <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
                         Create a New Story
                     </h1>
-                    <p className="text-gray-600">
+                    <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                         Share your thoughts, ideas, and stories with the world
                     </p>
                 </div>

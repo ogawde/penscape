@@ -70,10 +70,12 @@ export const Blogs = () => {
   return (
     <div className="min-h-screen bg-[#FAF8F1]">
       <Appbar />
-      <div className="pt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-[#334443] mb-4">Discover Amazing Stories</h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+      <div className="pt-28 sm:pt-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        <div className="text-center mb-14 sm:mb-16">
+          <h1 className="text-4xl sm:text-5xl font-bold text-[#334443] mb-5 sm:mb-6">
+            Discover Amazing Stories
+          </h1>
+          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
             Explore a world of creativity, insights, and inspiration from talented writers around the globe.
           </p>
         </div>

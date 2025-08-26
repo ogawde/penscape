@@ -1,29 +1,30 @@
--- Drop existing table and relations
-DROP TABLE IF EXISTS "Blog";
-DROP TABLE IF EXISTS "User";
-
--- Create new User table with standardized schema
+-- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
+
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
--- Create unique indexes
-CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
--- Recreate Blog table with relation to User
+-- CreateTable
 CREATE TABLE "Blog" (
     "id" SERIAL NOT NULL,
     "authorId" INTEGER NOT NULL,
     "content" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "published" BOOLEAN NOT NULL DEFAULT false,
+    "tags" TEXT[],
+
     CONSTRAINT "Blog_pkey" PRIMARY KEY ("id")
 );
 
--- Add foreign key constraint
+-- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- AddForeignKey
 ALTER TABLE "Blog" ADD CONSTRAINT "Blog_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
