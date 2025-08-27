@@ -97,7 +97,6 @@ export const Profile = () => {
     <div className="min-h-screen bg-gray-50">
       <Appbar />
       <div className="pt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Profile Header */}
         <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
           <div className="flex items-start justify-between mb-6">
             <div>
@@ -114,7 +113,6 @@ export const Profile = () => {
             )}
           </div>
 
-          {/* Profile Information */}
           {isEditing ? (
             <div className="space-y-4">
               <div>
@@ -209,7 +207,6 @@ export const Profile = () => {
           )}
         </div>
 
-        {/* User's Blogs */}
         <div>
           <h2 className="text-2xl font-bold text-gray-900 mb-6">My Stories</h2>
           {user.blogs && user.blogs.length > 0 ? (

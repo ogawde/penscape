@@ -16,6 +16,9 @@ export const BlogCard = ({
   publishedDate,
   tags,
 }: BlogCardProps) => {
+  const plainSnippet = content.replace(/<[^>]+>/g, "").trim();
+  const snippet = plainSnippet.slice(0, 150) + (plainSnippet.length > 150 ? "..." : "");
+
   return (
     <Link to={`/blog/${id}`}>
       <div className="bg-white rounded-lg p-6 border border-gray-200 hover:border-teal-300 transition-all duration-300 cursor-pointer hover:shadow-xl transform hover:-translate-y-1">
@@ -35,10 +38,9 @@ export const BlogCard = ({
           {title}
         </div>
         <div className="text-base font-normal text-gray-600 line-clamp-3 mb-4">
-          {content.slice(0, 150)}...
+          {snippet}
         </div>
-        
-        {/* Tags */}
+
         {tags && tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
             {tags.map((tag, index) => (
@@ -54,7 +56,7 @@ export const BlogCard = ({
         
         <div className="flex items-center justify-between">
           <div className="text-gray-500 text-sm font-medium">
-            {`${Math.ceil(content.length / 100)} min read`}
+            {`${Math.ceil(plainSnippet.length / 100)} min read`}
           </div>
           <div className="text-teal-600 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             Read more →

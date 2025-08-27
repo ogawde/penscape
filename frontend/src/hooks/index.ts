@@ -8,6 +8,8 @@ export interface Blog {
   title: string;
   id: number;
   published?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
   tags?: string[];
   author: {
     id: number;

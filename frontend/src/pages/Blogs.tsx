@@ -128,10 +128,14 @@ export const Blogs = () => {
             <div key={blog.id}>
               <BlogCard
                 id={blog.id}
-                authorName={blog.author?.username || "Anonymous"}
+                authorName={blog.author?.username || ""}
                 title={blog.title}
                 content={blog.content}
-                publishedDate={new Date().toLocaleDateString()}
+                publishedDate={
+                  blog.createdAt
+                    ? new Date(blog.createdAt).toLocaleDateString()
+                    : ""
+                }
                 tags={blog.tags}
               />
             </div>

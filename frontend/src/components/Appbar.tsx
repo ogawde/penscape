@@ -13,12 +13,10 @@ export const Appbar = () => {
             const currentScrollY = window.scrollY;
             
             if (currentScrollY < lastScrollY || currentScrollY < 10) {
-                // Scrolling up or at top
                 setIsVisible(true);
             } else {
-                // Scrolling down
                 setIsVisible(false);
-                setShowDropdown(false); // Close dropdown when hiding
+                setShowDropdown(false);
             }
             
             setLastScrollY(currentScrollY);
@@ -46,7 +44,6 @@ export const Appbar = () => {
             }`}
         >
             <div className="flex justify-between items-center px-6 lg:px-10 py-4 max-w-7xl mx-auto">
-                {/* Logo */}
                 <Link 
                     to={'/blogs'} 
                     className="font-extrabold text-2xl text-teal-700 hover:text-teal-800 transition-all duration-300 cursor-pointer hover:scale-105 transform"
@@ -54,9 +51,7 @@ export const Appbar = () => {
                     PENSCAPE
                 </Link>
 
-                {/* Navigation */}
                 <div className="flex items-center space-x-4">
-                    {/* New Post Button */}
                     <Link to={`/publish`}>
                         <button 
                             type="button" 
@@ -66,7 +61,6 @@ export const Appbar = () => {
                         </button>
                     </Link>
 
-                    {/* User Avatar with Dropdown */}
                     <div className="relative">
                         <button
                             onClick={() => setShowDropdown(!showDropdown)}
@@ -85,7 +79,6 @@ export const Appbar = () => {
                             </svg>
                         </button>
 
-                        {/* Dropdown Menu */}
                         {showDropdown && (
                             <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-2xl border border-gray-200 py-2 z-50 animate-fadeIn">
                                 <button

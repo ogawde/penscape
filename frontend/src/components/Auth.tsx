@@ -79,7 +79,6 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-beige via-gold/10 to-teal/10 flex items-center justify-center p-4">
-      {/* subtle animated glow behind the card – inspired by Magic UI backgrounds */}
       <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-64 max-w-xl bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.35),_transparent_60%)] opacity-70 blur-3xl" />
 
       <div className="relative w-full max-w-md">

@@ -1,7 +1,6 @@
 export const Quote = () => {
   return (
     <div className="relative h-screen overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 text-slate-50">
-      {/* soft blobs in the background – similar vibe to Magic UI / Cult-UI hero blocks */}
       <div className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-emerald-500/25 blur-3xl" />
       <div className="pointer-events-none absolute bottom-0 right-0 h-80 w-80 rounded-full bg-amber-400/20 blur-3xl" />
 

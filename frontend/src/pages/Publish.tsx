@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import { Appbar } from "../components/Appbar";
 import { RichTextEditor } from "../components/RichTextEditor";
 import axios from "axios";
@@ -23,10 +24,16 @@ export const Publish = () => {
     const [content, setContent] = useState("");
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [isPublishing, setIsPublishing] = useState(false);
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
     const navigate = useNavigate();
 
+    const hasContent = () => {
+        const stripped = content.replace(/<[^>]+>/g, "").trim();
+        return stripped.length > 0;
+    };
+
     const handlePublish = async () => {
-        if (!title.trim() || !content.trim()) {
+        if (!title.trim() || !hasContent()) {
             alert("Please provide both a title and content for your post.");
             return;
         }
@@ -66,7 +73,6 @@ export const Publish = () => {
         <div className="min-h-screen bg-gray-50">
             <Appbar />
             <div className="pt-28 sm:pt-32 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-                {/* Header */}
                 <div className="mb-10 sm:mb-12">
                     <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
                         Create a New Story
@@ -76,7 +82,6 @@ export const Publish = () => {
                     </p>
                 </div>
 
-                {/* Title Input */}
                 <div className="mb-6">
                     <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
                         Title
@@ -91,7 +96,6 @@ export const Publish = () => {
                     />
                 </div>
 
-                {/* Tags Selector */}
                 <div className="mb-6">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                         Tags (Select up to 3)
@@ -118,7 +122,6 @@ export const Publish = () => {
                     </p>
                 </div>
 
-                {/* Rich Text Editor */}
                 <div className="mb-6">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                         Content
@@ -129,7 +132,6 @@ export const Publish = () => {
                     />
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex items-center justify-between">
                     <button
                         onClick={() => navigate("/blogs")}
@@ -138,24 +140,86 @@ export const Publish = () => {
                     >
                         Cancel
                     </button>
-                    <button
-                        onClick={handlePublish}
-                        disabled={isPublishing}
-                        className="px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-xl"
-                    >
-                        {isPublishing ? (
-                            <span className="flex items-center">
-                                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                Publishing...
-                            </span>
-                        ) : (
-                            "Publish Story"
-                        )}
-                    </button>
+                    <div className="flex items-center gap-3">
+                        <button
+                            type="button"
+                            onClick={() => setIsPreviewOpen(true)}
+                            className="px-6 py-3 border border-teal-600 text-teal-600 rounded-lg hover:bg-teal-50 transition-all duration-300 font-medium shadow-sm disabled:opacity-50 disabled:pointer-events-none"
+                            disabled={isPublishing}
+                        >
+                            Preview
+                        </button>
+                        <button
+                            onClick={handlePublish}
+                            disabled={isPublishing}
+                            className="px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-xl"
+                        >
+                            {isPublishing ? (
+                                <span className="flex items-center">
+                                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Publishing...
+                                </span>
+                            ) : (
+                                "Publish Story"
+                            )}
+                        </button>
+                    </div>
                 </div>
+
+                {isPreviewOpen &&
+                    createPortal(
+                        <div
+                            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60"
+                            role="dialog"
+                            aria-modal="true"
+                            aria-labelledby="preview-title"
+                        >
+                            <div className="relative w-full h-full max-w-5xl mx-auto bg-white shadow-xl overflow-y-auto">
+                                <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b bg-white shadow-sm">
+                                    <h2 id="preview-title" className="text-lg font-semibold text-gray-900">
+                                        Preview: {title || "Untitled story"}
+                                    </h2>
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsPreviewOpen(false)}
+                                        className="px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded"
+                                    >
+                                        Close
+                                    </button>
+                                </div>
+
+                                <div className="px-6 py-8 max-w-3xl mx-auto">
+                                    <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                                        {title || "Untitled story"}
+                                    </h1>
+
+                                    {selectedTags.length > 0 && (
+                                        <div className="flex flex-wrap gap-2 mb-6">
+                                            {selectedTags.map((tag) => (
+                                                <span
+                                                    key={tag}
+                                                    className="px-3 py-1 bg-teal-100 text-teal-700 text-xs font-medium rounded-full"
+                                                >
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    <div
+                                        className="preview-content max-w-none min-h-[200px]"
+                                        dangerouslySetInnerHTML={{
+                                            __html: content || '<p style="color:#6b7280;">Start writing your story to see a preview here.</p>',
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>,
+                        document.body
+                    )}
             </div>
         </div>
     );

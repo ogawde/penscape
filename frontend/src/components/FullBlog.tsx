@@ -4,7 +4,7 @@ import { Avatar, BlogCard } from "./BlogCard";
 import { Link } from "react-router-dom";
 
 export const FullBlog = ({ blog }: { blog: Blog }) => {
-  const authorName = blog.author?.username || "Anonymous";
+  const authorName = blog.author?.username || "";
   const authorId = blog.author?.id || 0;
   const { loading: relatedLoading, blogs: relatedBlogs } = useRelatedBlogs(blog.id);
 
@@ -13,7 +13,6 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
       <Appbar />
       <div className="pt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
           <div className="lg:col-span-2 bg-white rounded-lg shadow-sm p-8">
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight">
               {blog.title}
@@ -28,15 +27,16 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
                   {authorName}
                 </Link>
                 <div className="text-sm text-gray-500">
-                  {new Date().toLocaleDateString('en-US', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  })}
+                  {blog.createdAt
+                    ? new Date(blog.createdAt).toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      })
+                    : ""}
                 </div>
               </div>
             </div>
-            {/* Tags */}
             {blog.tags && blog.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-6">
                 {blog.tags.map((tag, index) => (
@@ -50,15 +50,27 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
               </div>
             )}
             
-            <div className="prose prose-lg max-w-none text-gray-800 whitespace-pre-wrap leading-relaxed">
-              {blog.content}
-            </div>
+            <div
+              className="prose prose-lg max-w-none text-gray-800 leading-relaxed preview-content"
+              dangerouslySetInnerHTML={{
+                __html: (() => {
+                  const raw = blog.content || "";
+                  if (!raw.trim()) return "";
+                  if (/^\s*</.test(raw.trim())) return raw;
+                  const escaped = raw
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/\n/g, "<br>");
+                  return `<p>${escaped}</p>`;
+                })(),
+              }}
+            />
           </div>
 
-          {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="sticky top-24">
-              {/* Author Info */}
               <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
                 <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
                   About the Author
@@ -88,7 +100,6 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
           </div>
         </div>
 
-        {/* Related Blogs Section */}
         {!relatedLoading && relatedBlogs.length > 0 && (
           <div className="mt-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-8">
@@ -99,10 +110,14 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
                 <BlogCard
                   key={relatedBlog.id}
                   id={relatedBlog.id}
-                  authorName={relatedBlog.author?.username || "Anonymous"}
+                  authorName={relatedBlog.author?.username || ""}
                   title={relatedBlog.title}
                   content={relatedBlog.content}
-                  publishedDate={new Date().toLocaleDateString()}
+                  publishedDate={
+                    relatedBlog.createdAt
+                      ? new Date(relatedBlog.createdAt).toLocaleDateString()
+                      : ""
+                  }
                   tags={relatedBlog.tags}
                 />
               ))}
