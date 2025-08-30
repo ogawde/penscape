@@ -2,6 +2,7 @@ import { ChangeEvent, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signupInput, signinInput } from "penscape-common";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -81,10 +82,15 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
     <div className="min-h-screen bg-gradient-to-br from-beige via-gold/10 to-teal/10 flex items-center justify-center p-4">
       <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-64 max-w-xl bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.35),_transparent_60%)] opacity-70 blur-3xl" />
 
-      <div className="relative w-full max-w-md">
+      <motion.div
+        className="relative w-full max-w-md"
+        initial={{ opacity: 0, y: 16, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.35, ease: "easeOut" }}
+      >
         <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/20 via-gold/10 to-teal/10 opacity-70 blur-xl" />
 
-        <div className="relative rounded-3xl border border-white/70 bg-white/90 shadow-[0_18px_45px_rgba(15,23,42,0.18)] backdrop-blur-xl p-8 animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-4 duration-500">
+        <div className="relative rounded-3xl border border-white/70 bg-white/90 shadow-[0_18px_45px_rgba(15,23,42,0.18)] backdrop-blur-xl p-8">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center rounded-full border border-amber-200/80 bg-amber-50/80 px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-amber-700 mb-4 animate-in fade-in-0 slide-in-from-top-3 duration-500">
               {type === "signin" ? "Welcome back writer" : "New chapter starts here"}
@@ -164,13 +170,15 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
           </div>
 
           <div className="mt-8 space-y-4">
-            <button
+            <motion.button
               onClick={sendRequest}
               type="button"
-              className="w-full bg-gradient-to-r from-teal-600 via-emerald-500 to-teal-600 hover:from-teal-500 hover:via-emerald-400 hover:to-teal-500 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 transform hover:translate-y-0.5 hover:shadow-[0_18px_35px_rgba(15,23,42,0.45)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300"
+              className="w-full bg-gradient-to-r from-teal-600 via-emerald-500 to-teal-600 hover:from-teal-500 hover:via-emerald-400 hover:to-teal-500 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300"
+              whileHover={{ y: 1, scale: 1.01, boxShadow: "0 18px 35px rgba(15,23,42,0.45)" }}
+              whileTap={{ scale: 0.985, y: 2 }}
             >
               {type === "signin" ? "Sign in" : "Create account"}
-            </button>
+            </motion.button>
           </div>
 
           <div className="mt-6 text-center text-sm">
@@ -185,7 +193,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

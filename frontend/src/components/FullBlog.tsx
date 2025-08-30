@@ -1,7 +1,8 @@
 import { Blog, useRelatedBlogs } from "../hooks";
 import { Appbar } from "./Appbar";
-import { Avatar, BlogCard } from "./BlogCard";
+import { BlogCard } from "./BlogCard";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export const FullBlog = ({ blog }: { blog: Blog }) => {
   const authorName = blog.author?.username || "";
@@ -11,22 +12,31 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Appbar />
-      <div className="pt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <motion.div
+        className="pt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+      >
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 bg-white rounded-lg shadow-sm p-8">
+          <motion.div
+            className="lg:col-span-2 bg-white rounded-lg shadow-sm p-8"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          >
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight">
               {blog.title}
             </h1>
             <div className="flex items-center mb-6 pb-6 border-b border-gray-200">
-              <Avatar size="big" name={authorName} />
-              <div className="ml-3">
-                <Link 
+              <div>
+                <Link
                   to={`/author/${authorId}`}
                   className="text-lg font-semibold text-gray-900 hover:text-teal-600 transition-colors duration-200"
                 >
                   {authorName}
                 </Link>
-                <div className="text-sm text-gray-500">
+                <div className="mt-1 text-sm text-gray-500">
                   {blog.createdAt
                     ? new Date(blog.createdAt).toLocaleDateString('en-US', { 
                         year: 'numeric', 
@@ -67,27 +77,29 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
                 })(),
               }}
             />
-          </div>
+          </motion.div>
 
-          <div className="lg:col-span-1">
+          <motion.div
+            className="lg:col-span-1"
+            initial={{ opacity: 0, x: 16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut", delay: 0.05 }}
+          >
             <div className="sticky top-24">
               <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
                 <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
                   About the Author
                 </h3>
-                <div className="flex items-start">
-                  <Avatar size="big" name={authorName} />
-                  <div className="ml-3">
-                    <Link 
-                      to={`/author/${authorId}`}
-                      className="text-lg font-bold text-gray-900 hover:text-teal-600 transition-colors duration-200"
-                    >
-                      {authorName}
-                    </Link>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Writer and storyteller sharing insights and experiences.
-                    </p>
-                  </div>
+                <div>
+                  <Link
+                    to={`/author/${authorId}`}
+                    className="text-lg font-bold text-gray-900 hover:text-teal-600 transition-colors duration-200"
+                  >
+                    {authorName}
+                  </Link>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Writer and storyteller sharing insights and experiences.
+                  </p>
                 </div>
                 <Link 
                   to={`/author/${authorId}`}
@@ -97,11 +109,16 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
                 </Link>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {!relatedLoading && relatedBlogs.length > 0 && (
-          <div className="mt-16">
+          <motion.div
+            className="mt-16"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          >
             <h2 className="text-3xl font-bold text-gray-900 mb-8">
               More from {authorName}
             </h2>
@@ -122,9 +139,9 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
                 />
               ))}
             </div>
-          </div>
+          </motion.div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };

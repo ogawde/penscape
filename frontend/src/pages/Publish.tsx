@@ -4,6 +4,7 @@ import { RichTextEditor } from "../components/RichTextEditor";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -72,7 +73,12 @@ export const Publish = () => {
     return (
         <div className="min-h-screen bg-gray-50">
             <Appbar />
-            <div className="pt-28 sm:pt-32 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+            <motion.div
+                className="pt-28 sm:pt-32 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+            >
                 <div className="mb-10 sm:mb-12">
                     <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
                         Create a New Story
@@ -133,26 +139,32 @@ export const Publish = () => {
                 </div>
 
                 <div className="flex items-center justify-between">
-                    <button
+                    <motion.button
                         onClick={() => navigate("/blogs")}
                         className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all duration-300 font-medium shadow-sm"
                         disabled={isPublishing}
+                        whileHover={{ y: -1, scale: 1.01 }}
+                        whileTap={{ scale: 0.985, y: 1 }}
                     >
                         Cancel
-                    </button>
+                    </motion.button>
                     <div className="flex items-center gap-3">
-                        <button
+                        <motion.button
                             type="button"
                             onClick={() => setIsPreviewOpen(true)}
                             className="px-6 py-3 border border-teal-600 text-teal-600 rounded-lg hover:bg-teal-50 transition-all duration-300 font-medium shadow-sm disabled:opacity-50 disabled:pointer-events-none"
                             disabled={isPublishing}
+                            whileHover={{ y: -1, scale: 1.01 }}
+                            whileTap={{ scale: 0.985, y: 1 }}
                         >
                             Preview
-                        </button>
-                        <button
+                        </motion.button>
+                        <motion.button
                             onClick={handlePublish}
                             disabled={isPublishing}
-                            className="px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-xl"
+                            className="px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                            whileHover={isPublishing ? {} : { scale: 1.03, y: -1 }}
+                            whileTap={isPublishing ? {} : { scale: 0.985, y: 1 }}
                         >
                             {isPublishing ? (
                                 <span className="flex items-center">
@@ -165,7 +177,7 @@ export const Publish = () => {
                             ) : (
                                 "Publish Story"
                             )}
-                        </button>
+                        </motion.button>
                     </div>
                 </div>
 
@@ -220,7 +232,7 @@ export const Publish = () => {
                         </div>,
                         document.body
                     )}
-            </div>
+            </motion.div>
         </div>
     );
 };

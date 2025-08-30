@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 interface BlogCardProps {
   authorName: string;
   title: string;
@@ -21,18 +22,26 @@ export const BlogCard = ({
 
   return (
     <Link to={`/blog/${id}`}>
-      <div className="bg-white rounded-lg p-6 border border-gray-200 hover:border-teal-300 transition-all duration-300 cursor-pointer hover:shadow-xl transform hover:-translate-y-1">
-        <div className="flex items-center mb-3">
-          <Avatar name={authorName} />
-          <div className="font-medium pl-2 text-sm text-gray-700">
-            {authorName}
-          </div>
-          <div className="flex justify-center flex-col pl-2">
-            <Circle />
-          </div>
-          <div className="pl-2 font-normal text-gray-500 text-sm">
-            {publishedDate}
-          </div>
+      <motion.div
+        className="bg-white rounded-lg p-6 border border-gray-200 cursor-pointer"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        whileHover={{
+          y: -6,
+          scale: 1.01,
+          boxShadow: "0 18px 45px rgba(15,23,42,0.18)",
+          borderColor: "rgba(13,148,136,0.8)",
+        }}
+      >
+        <div className="flex items-center mb-3 text-sm text-gray-600">
+          <span className="font-medium text-gray-800">{authorName}</span>
+          {publishedDate && (
+            <>
+              <span className="mx-2 h-1 w-1 rounded-full bg-slate-500" />
+              <span className="text-gray-500">{publishedDate}</span>
+            </>
+          )}
         </div>
         <div className="text-xl font-bold pt-2 mb-2 text-gray-900 line-clamp-2 hover:text-teal-600 transition-colors duration-300">
           {title}
@@ -62,37 +71,7 @@ export const BlogCard = ({
             Read more →
           </div>
         </div>
-      </div>
+      </motion.div>
     </Link>
   );
 };
-
-export function Circle() {
-  return <div className="h-1 w-1 rounded-full bg-slate-800	"></div>;
-}
-
-export function Avatar({
-  name,
-  size = "small",
-}: {
-  name: string;
-  size?: "small" | "big";
-}) {
-  const initial = name && name.length > 0 ? name[0].toUpperCase() : "A";
-  
-  return (
-    <div
-      className={`relative inline-flex items-center justify-center overflow-hidden bg-gray-600 rounded-full ${
-        size === "small" ? "w-6 h-6" : "w-10 h-10"
-      }`}
-    >
-      <span
-        className={`${
-          size === "small" ? "text-xs" : "text-md"
-        } font-extralight text-white`}
-      >
-        {initial}
-      </span>
-    </div>
-  );
-}

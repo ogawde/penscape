@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
-import { Avatar } from "./BlogCard"
 import { Link, useNavigate } from "react-router-dom"
+import { motion } from "framer-motion"
+import accountAvatar from "../assets/account-avatar-head-svgrepo-com.svg"
 
 export const Appbar = () => {
     const navigate = useNavigate();
@@ -13,7 +14,7 @@ export const Appbar = () => {
             const currentScrollY = window.scrollY;
             
             if (currentScrollY < lastScrollY || currentScrollY < 10) {
-                setIsVisible(true);
+                 setIsVisible(true);
             } else {
                 setIsVisible(false);
                 setShowDropdown(false);
@@ -38,10 +39,11 @@ export const Appbar = () => {
     };
 
     return (
-        <div 
-            className={`fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 transition-transform duration-300 ${
-                isVisible ? 'translate-y-0' : '-translate-y-full'
-            }`}
+        <motion.div 
+            className="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200"
+            initial={{ y: 0, opacity: 0 }}
+            animate={{ y: isVisible ? 0 : -80, opacity: 1 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
         >
             <div className="flex justify-between items-center px-6 lg:px-10 py-4 max-w-7xl mx-auto">
                 <Link 
@@ -64,9 +66,13 @@ export const Appbar = () => {
                     <div className="relative">
                         <button
                             onClick={() => setShowDropdown(!showDropdown)}
-                            className="flex items-center space-x-2 hover:bg-gray-100 rounded-full p-2 transition-all duration-300 hover:shadow-md"
+                            className="flex items-center space-x-2 hover:bg-gray-100 rounded-full px-3 py-2 transition-all duration-300 hover:shadow-md"
                         >
-                            <Avatar size={"big"} name="harkirat" />
+                            <img
+                                src={accountAvatar}
+                                alt="Account"
+                                className="h-8 w-8 rounded-full object-contain"
+                            />
                             <svg 
                                 className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${
                                     showDropdown ? 'rotate-180' : ''
@@ -104,6 +110,6 @@ export const Appbar = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 }

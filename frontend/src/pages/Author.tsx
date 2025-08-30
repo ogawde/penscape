@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import { Appbar } from "../components/Appbar";
 import { PenLoader } from "../components/PenLoader";
 import { BlogCard } from "../components/BlogCard";
-import { Avatar } from "../components/BlogCard";
 import { useUser } from "../hooks";
+import { motion } from "framer-motion";
 
 export const Author = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,12 +14,17 @@ export const Author = () => {
     return (
       <div className="min-h-screen bg-gray-50">
         <Appbar />
-        <div className="pt-20 flex justify-center items-center min-h-[60vh]">
+        <motion.div
+          className="pt-20 flex justify-center items-center min-h-[60vh]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.25 }}
+        >
           <div className="text-center">
             <PenLoader size="lg" />
             <p className="mt-4 text-gray-600">Loading author profile...</p>
           </div>
-        </div>
+        </motion.div>
       </div>
     );
   }
@@ -44,17 +49,20 @@ export const Author = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Appbar />
-      <div className="pt-20">
-        <div className="bg-gradient-to-r from-teal-600 to-teal-700 text-white py-16">
+      <motion.div
+        className="pt-20"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+      >
+        <motion.div
+          className="bg-gradient-to-r from-teal-600 to-teal-700 text-white py-16"
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+        >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center space-x-6">
-              <div className="flex-shrink-0">
-                <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center">
-                  <span className="text-4xl font-bold text-teal-600">
-                    {user.username[0].toUpperCase()}
-                  </span>
-                </div>
-              </div>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div className="flex-1">
                 <h1 className="text-4xl font-bold mb-2">{user.username}</h1>
                 <p className="text-teal-100 text-lg mb-4">
@@ -69,17 +77,15 @@ export const Author = () => {
                   </div>
                 </div>
               </div>
-              <div>
-                <button
-                  className="px-6 py-3 bg-white text-teal-600 font-semibold rounded-lg hover:bg-gold/20 transition-all duration-300 transform hover:scale-105 shadow-lg"
-                  onClick={() => alert("Follow functionality coming soon!")}
-                >
-                  Follow
-                </button>
-              </div>
+              <button
+                className="px-6 py-3 bg-white text-teal-600 font-semibold rounded-lg hover:bg-gold/20 transition-all duration-300 transform hover:scale-105 shadow-lg self-start md:self-auto"
+                onClick={() => alert("Follow functionality coming soon!")}
+              >
+                Follow
+              </button>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-8">
@@ -89,19 +95,25 @@ export const Author = () => {
           {user.blogs && user.blogs.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {user.blogs.map((blog) => (
-                <BlogCard
+                <motion.div
                   key={blog.id}
-                  id={blog.id}
-                  authorName={user.username}
-                  title={blog.title}
-                  content={blog.content}
-                  publishedDate={
-                    blog.createdAt
-                      ? new Date(blog.createdAt).toLocaleDateString()
-                      : ""
-                  }
-                  tags={blog.tags}
-                />
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                >
+                  <BlogCard
+                    id={blog.id}
+                    authorName={user.username}
+                    title={blog.title}
+                    content={blog.content}
+                    publishedDate={
+                      blog.createdAt
+                        ? new Date(blog.createdAt).toLocaleDateString()
+                        : ""
+                    }
+                    tags={blog.tags}
+                  />
+                </motion.div>
               ))}
             </div>
           ) : (
@@ -124,7 +136,7 @@ export const Author = () => {
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

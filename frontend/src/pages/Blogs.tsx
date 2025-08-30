@@ -3,6 +3,7 @@ import { BlogCard } from "../components/BlogCard";
 import { Appbar } from "../components/Appbar";
 import { useBlogs } from "../hooks";
 import { PenLoader } from "../components/PenLoader";
+import { motion } from "framer-motion";
 
 const TAGS = [
   "All",
@@ -60,9 +61,14 @@ export const Blogs = () => {
     return (
       <div className="min-h-screen bg-[#FAF8F1]">
         <Appbar />
-        <div className="pt-24 flex items-center justify-center">
+        <motion.div
+          className="pt-24 flex items-center justify-center min-h-[calc(100vh-6rem)]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.25 }}
+        >
           <PenLoader size="lg" />
-        </div>
+        </motion.div>
       </div>
     );
   }
@@ -70,7 +76,12 @@ export const Blogs = () => {
   return (
     <div className="min-h-screen bg-[#FAF8F1]">
       <Appbar />
-      <div className="pt-28 sm:pt-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+      <motion.div
+        className="pt-28 sm:pt-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+      >
         <div className="text-center mb-14 sm:mb-16">
           <h1 className="text-4xl sm:text-5xl font-bold text-[#334443] mb-5 sm:mb-6">
             Discover Amazing Stories
@@ -125,7 +136,12 @@ export const Blogs = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {currentBlogs.map((blog) => (
-            <div key={blog.id}>
+            <motion.div
+              key={blog.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+            >
               <BlogCard
                 id={blog.id}
                 authorName={blog.author?.username || ""}
@@ -138,7 +154,7 @@ export const Blogs = () => {
                 }
                 tags={blog.tags}
               />
-            </div>
+            </motion.div>
           ))}
         </div>
 
@@ -203,7 +219,7 @@ export const Blogs = () => {
             </p>
           </div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };
