@@ -28,6 +28,7 @@ export const Appbar = () => {
     }, [lastScrollY]);
 
     const handleLogout = () => {
+        pendo.clearSession();
         localStorage.removeItem("token");
         navigate("/signin");
         setShowDropdown(false);
