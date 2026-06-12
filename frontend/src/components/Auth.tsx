@@ -80,6 +80,21 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
         // Pendo identify is non-blocking; continue even if it fails
       }
 
+      try {
+        if (type === "signup") {
+          pendo.track("user_signed_up", {
+            username: postInputs.username,
+            has_email: Boolean(postInputs.email),
+          });
+        } else {
+          pendo.track("user_signed_in", {
+            username: postInputs.username,
+          });
+        }
+      } catch (e) {
+        // Pendo tracking is non-blocking
+      }
+
       navigate("/blogs");
     } catch (error) {
       setError("Server error or invalid credentials");
