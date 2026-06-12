@@ -63,6 +63,23 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
       );
       const jwt = response.data.jwt;
       localStorage.setItem("token", jwt);
+
+      try {
+        const userResponse = await axios.get(`${BACKEND_URL}/api/v1/user/me`, {
+          headers: { Authorization: jwt },
+        });
+        const user = userResponse.data;
+        pendo.identify({
+          visitor: {
+            id: user.id,
+            email: user.email,
+            username: user.username,
+          },
+        });
+      } catch (e) {
+        // Pendo identify is non-blocking; continue even if it fails
+      }
+
       navigate("/blogs");
     } catch (error) {
       setError("Server error or invalid credentials");
