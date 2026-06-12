@@ -54,6 +54,19 @@ export const Publish = () => {
                     },
                 }
             );
+
+            try {
+                pendo.track("story_published", {
+                    blog_id: response.data.id,
+                    title_length: title.length,
+                    content_length: content.replace(/<[^>]+>/g, "").trim().length,
+                    tags: selectedTags.join(","),
+                    tag_count: selectedTags.length,
+                });
+            } catch (e) {
+                // Pendo tracking is non-blocking
+            }
+
             navigate(`/blog/${response.data.id}`);
         } catch (error) {
             alert("Failed to publish post. Please try again.");

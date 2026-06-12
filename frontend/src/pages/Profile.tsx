@@ -44,6 +44,17 @@ export const Profile = () => {
         },
       });
 
+      try {
+        pendo.track("profile_updated", {
+          username_changed: formData.username !== user?.username,
+          email_changed: formData.email !== user?.email,
+          password_changed: Boolean(formData.password),
+          fields_changed_count: Object.keys(updateData).length,
+        });
+      } catch (e) {
+        // Pendo tracking is non-blocking
+      }
+
       setMessage({ type: "success", text: "Profile updated successfully!" });
       setIsEditing(false);
       setFormData({ ...formData, password: "" });

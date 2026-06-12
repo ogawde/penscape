@@ -50,6 +50,25 @@ export const Blogs = () => {
 
     setFilteredBlogs(filtered);
     setCurrentPage(1);
+
+    if (!searchQuery && selectedTag === "All") return;
+
+    const resultCount = filtered.length;
+    const totalCount = blogs.length;
+    const debounceTimer = setTimeout(() => {
+      try {
+        pendo.track("blog_search_executed", {
+          search_query: searchQuery.slice(0, 100),
+          selected_tag: selectedTag,
+          results_count: resultCount,
+          total_blogs_count: totalCount,
+        });
+      } catch (e) {
+        // Pendo tracking is non-blocking
+      }
+    }, 500);
+
+    return () => clearTimeout(debounceTimer);
   }, [blogs, searchQuery, selectedTag]);
 
   const totalPages = Math.ceil(filteredBlogs.length / BLOGS_PER_PAGE);
